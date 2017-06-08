@@ -23,9 +23,9 @@ Finance::YieldCurve - provides methods for interpolation on interest rates or di
   asset => 'USD',
  );
  # For dividends, we return the closest value with no interpolation
- my $rate = $interest_rates->find_closest_to(7 * 24 * 60 * 60);
+ my $dividend_rate = $rates->find_closest_to(7 * 24 * 60 * 60);
  # For interest rates, we interpolate linearly between the points
- my $rate = $interest_rates->interpolate(7 * 24 * 60 * 60);
+ my $interest_rate = $rates->interpolate(7 * 24 * 60 * 60);
 
 =head1 DESCRIPTION
 
