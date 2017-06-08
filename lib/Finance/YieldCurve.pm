@@ -20,6 +20,7 @@ Finance::YieldCurve - provides methods for interpolation on interest rates or di
    7  => 0.011,
    14 => 0.012,
   },
+  asset => 'USD',
  );
  # For dividends, we return the closest value with no interpolation
  my $rate = $interest_rates->find_closest_to(7 * 24 * 60 * 60);
@@ -52,6 +53,16 @@ has data => (
     is => 'ro'
 );
 
+=head2 asset
+
+String representing the currency, stock or index, for example C<USD>.
+
+=cut
+
+has asset => (
+    is => 'ro'
+);
+
 =head1 METHODS
 
 =head2 interpolate
@@ -71,7 +82,7 @@ sub interpolate {
     $tiy ||= 0;
 
     my $interp = Math::Function::Interpolator->new(points => $self->data);
-    return $interp->linear($tiy * 365) / 100;
+    return $interp->linear($tiy * $self->day_count) / 100;
 }
 
 =head2 find_closest_to
@@ -92,7 +103,7 @@ sub find_closest_to {
 
     # Handle discrete dividend
     my ($nearest_yield_days_before, $nearest_yield_before) = (0, 0);
-    my $days_to_expiry = $tiy * 365.0;
+    my $days_to_expiry = $tiy * $self->day_count;
     my $rates = $self->data;
     my @sorted_expiries = sort { $a <=> $b } keys(%$rates);
     foreach my $day (@sorted_expiries) {
@@ -105,9 +116,26 @@ sub find_closest_to {
     }
 
     # Re-annualize
-    my $discrete_points = $nearest_yield_before * $nearest_yield_days_before / 365;
+    my $discrete_points = $nearest_yield_before * $nearest_yield_days_before / $self->day_count;
 
-    return $discrete_points * 365 / ($days_to_expiry * 100);
+    return $discrete_points * $self->day_count / ($days_to_expiry * 100);
+}
+
+# Mapping from asset to number of days - everything not in this list will be 365
+my %asset_daycounts = map {; $_ => 360 } qw(AED CHF CZK EGP EUR IDR JPY MXN NOK SAR SEK USD XAG XAU TRY);
+
+=head2 day_count
+
+Returns the day count for our asset.
+
+This is an integer value, and will either be 365 or 360.
+
+=cut
+
+sub day_count {
+    my ($self) = @_;
+    return $asset_daycounts{$self->asset} // 365;
 }
 
 1;
+
