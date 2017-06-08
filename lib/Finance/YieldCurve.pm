@@ -28,7 +28,11 @@ Finance::YieldCurve - provides methods for interpolation on interest rates or di
 
 =head1 DESCRIPTION
 
+Handles interpolation methods for different types of yield curve.
 
+Instantiate with a set of data points, then use either the L</find_closest_to>
+or L</interpolate> methods to find the appropriate value for a given time (measured
+in years).
 
 =cut
 
@@ -36,9 +40,19 @@ use Moo;
 
 use Math::Function::Interpolator;
 
+=head1 ATTRIBUTES
+
+=head2 data
+
+The data points, as a hashref of days => value.
+
+=cut
+
 has data => (
     is => 'ro'
 );
+
+=head1 METHODS
 
 =head2 interpolate
 

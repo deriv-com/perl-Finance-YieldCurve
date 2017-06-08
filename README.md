@@ -20,6 +20,20 @@ Finance::YieldCurve - provides methods for interpolation on interest rates or di
 
 # DESCRIPTION
 
+Handles interpolation methods for different types of yield curve.
+
+Instantiate with a set of data points, then use either the ["find\_closest\_to"](#find_closest_to)
+or ["interpolate"](#interpolate) methods to find the appropriate value for a given time (measured
+in years).
+
+# ATTRIBUTES
+
+## data
+
+The data points, as a hashref of days => value.
+
+# METHODS
+
 ## interpolate
 
 Get the interpolated rate for this yield curve over the given time period (fractional years).
