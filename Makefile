@@ -5,5 +5,4 @@ tidy:
 
 doc:
 	pod2markdown lib/Finance/YieldCurve.pm > README.md
-	for i in lib/Finance/YieldCurve/*.pm; do pod2markdown $i; done >> README.md
 
