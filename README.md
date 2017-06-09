@@ -12,11 +12,12 @@ Finance::YieldCurve - provides methods for interpolation on interest rates or di
       7  => 0.011,
       14 => 0.012,
      },
+     asset => 'USD',
     );
     # For dividends, we return the closest value with no interpolation
-    my $rate = $interest_rates->find_closest_to(7 * 24 * 60 * 60);
+    my $dividend_rate = $rates->find_closest_to(7 * 24 * 60 * 60);
     # For interest rates, we interpolate linearly between the points
-    my $rate = $interest_rates->interpolate(7 * 24 * 60 * 60);
+    my $interest_rate = $rates->interpolate(7 * 24 * 60 * 60);
 
 # DESCRIPTION
 
@@ -31,6 +32,10 @@ in years).
 ## data
 
 The data points, as a hashref of days => value.
+
+## asset
+
+String representing the currency, stock or index, for example `USD`.
 
 # METHODS
 
@@ -49,3 +54,9 @@ Returns the closest point to the request value.
 Example:
 
     my $rate = $curve->find_closest_to(7 * 24 * 60 * 60);
+
+## day\_count
+
+Returns the day count for our asset.
+
+This is an integer value, and will either be 365 or 360.
